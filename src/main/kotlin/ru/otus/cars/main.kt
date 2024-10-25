@@ -1,5 +1,7 @@
 package ru.otus.cars
 
+import ru.otus.cars.gas_station.GasStation
+
 fun main() {
     println("\n===> drive cars...")
     driveCars()
@@ -16,6 +18,8 @@ fun main() {
     techChecks()
     println("\n===> Taz...")
     println(Taz.color)
+    println("\n===> Fuel car collection...")
+    saveRefillCarCollection()
 }
 
 fun driveCars() {
@@ -90,4 +94,28 @@ fun repairEngine(car: VazPlatform) {
         is VazEngine.LADA_2107 -> println("Чистка карбюратора у двигателя объемом ${car.engine.volume} куб.см у машины $car")
         is VazEngine.SAMARA_2108 -> println("Угол зажигания у двигателя объемом ${car.engine.volume} куб.см у машины $car")
     }
+}
+
+fun saveRefillCarCollection() {
+    val gasStation = GasStation()
+    val carList = listOf( Vaz2107.build(Car.Plates("123", 77)),
+        Vaz2108.build(Car.Plates("321", 78)),
+        Taz)
+
+    carList.forEach{ car ->
+        fun getCarOutputSafely() {
+            try {
+                println("В баке ${car.carOutput.getFuelContents()} литров")
+            }
+            catch (e: NotImplementedError){
+                println("Что-то пошло не так: ${e.message}")
+            }
+        }
+
+        println("Текущая машина - $car")
+        getCarOutputSafely()
+        gasStation.safeRefill(car, 50)
+        getCarOutputSafely()
+    }
+
 }
